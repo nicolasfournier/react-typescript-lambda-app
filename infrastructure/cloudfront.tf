@@ -1,5 +1,5 @@
 resource "aws_cloudfront_cache_policy" "api_gateway_optimized" {
-  name        = "ApiGatewayOptimized"
+  name        = "${var.project_name}-ApiGatewayOptimized"
 
   default_ttl = 0
   max_ttl     = 0
@@ -20,7 +20,7 @@ resource "aws_cloudfront_cache_policy" "api_gateway_optimized" {
 }
 
 resource "aws_cloudfront_origin_request_policy" "api_gateway_optimized" {
-  name    = "ApiGatewayOptimized"
+  name    = "${var.project_name}-ApiGatewayOptimized"
 
   cookies_config {
     cookie_behavior = "none"
@@ -43,8 +43,8 @@ resource "aws_cloudfront_distribution" "default" {
   price_class = "PriceClass_All"
 
   origin {
-    domain_name = "${aws_s3_bucket.frontend.id}.s3-website-${aws_s3_bucket.frontend.region}.amazonaws.com"
-    origin_id   = "s3-${aws_s3_bucket.frontend.id}"
+    domain_name = "${aws_s3_bucket_website_configuration.frontend.id}.s3-website-${var.bucket_region}.amazonaws.com"
+    origin_id   = "s3-${aws_s3_bucket_website_configuration.frontend.id}"
 
     custom_origin_config {
       http_port                = 80
@@ -59,7 +59,7 @@ resource "aws_cloudfront_distribution" "default" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id       = "s3-${aws_s3_bucket.frontend.id}"
+    target_origin_id       = "s3-${aws_s3_bucket_website_configuration.frontend.id}"
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
     forwarded_values {
