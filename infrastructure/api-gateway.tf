@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "default" {
-  name = "default-api"
+  name = "${var.project_name}-default-api"
   protocol_type = "HTTP"
 }
 
